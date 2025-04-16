@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace SkalProj_Datastrukturer_Minne
 {
@@ -71,6 +72,71 @@ namespace SkalProj_Datastrukturer_Minne
              * As a default case, tell them to use only + or -
              * Below you can see some inspirational code to begin working.
             */
+            List<string> theList = new();
+            
+
+            bool HasExited(string input)
+            {
+                    return input.StartsWith('0');
+            }
+
+            string StringValidation(string input)
+            {
+                while (string.IsNullOrWhiteSpace(input))
+                {
+                    Console.Write("Invalid entry, try again: ");
+                    input = Console.ReadLine();
+                }
+                ;
+                return input;
+            }
+            void AddToList(string input)
+            {
+                if(!string.IsNullOrEmpty(input))
+                {
+                    theList.Add(input.ToLower());
+                }
+                DisplayCountAndCapacity();
+            }
+            void DisplayCountAndCapacity()
+            {
+                Console.WriteLine($"The list now contains {theList.Count} items.");
+                Console.WriteLine($"The list has a capacity of {theList.Capacity}.");
+            }
+
+            void RemoveFromList(string input)
+            {
+                if (!string.IsNullOrEmpty(input))
+                {
+                    theList.Remove(input.ToLower());
+                }
+                DisplayCountAndCapacity();
+            }
+
+            while (true)
+            {
+                Console.WriteLine("Please enter a command (+ or -) followed by a name to add or remove from the list");
+                Console.WriteLine("To exit this menu, please enter '0'");
+                var input = StringValidation(Console.ReadLine());
+
+                if (HasExited(input))
+                    break;
+                char nav = input[0];
+                string value = input.Substring(1);
+                switch (nav)
+                {
+                    case '+':
+                        AddToList(value);
+                        break;
+                    case '-':
+                        RemoveFromList(value);
+                        break;
+                    default:
+                        Console.WriteLine("Invalid command. Please use + or -.");
+                        input = StringValidation(Console.ReadLine());
+                        break;
+                }
+            }
 
             //List<string> theList = new List<string>();
             //string input = Console.ReadLine();
