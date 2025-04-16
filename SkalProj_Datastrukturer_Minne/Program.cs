@@ -3,14 +3,20 @@ using System.Runtime.CompilerServices;
 
 namespace SkalProj_Datastrukturer_Minne
 {
-    class Program
+    static class Program
     {
         /// <summary>
         /// The main method, vill handle the menues for the program
         /// </summary>
         /// <param name="args"></param>
+
+         static void Log( this string message)
+        {
+            Console.WriteLine($"{message}");
+        }
         static void Main()
         {
+            var Log = (string message) => Console.WriteLine($"{message}");
 
             while (true)
             {
@@ -73,50 +79,52 @@ namespace SkalProj_Datastrukturer_Minne
              * Below you can see some inspirational code to begin working.
             */
             List<string> theList = new();
-            
 
-            bool HasExited(string input)
-            {
-                    return input.StartsWith('0');
-            }
+            var HasExited = (string input) => input.StartsWith('0');
 
-            string StringValidation(string input)
+            var StringValidation = (string input) =>
             {
                 while (string.IsNullOrWhiteSpace(input))
                 {
-                    Console.Write("Invalid entry, try again: ");
+                    "Invalid entry, try again: ".Log();
                     input = Console.ReadLine();
                 }
                 ;
                 return input;
-            }
-            void AddToList(string input)
+            };
+
+            var DisplayCountAndCapacity = () =>
             {
-                if(!string.IsNullOrEmpty(input))
+                $"The list now contains {theList.Count} items.".Log();
+                $"The list has a capacity of {theList.Capacity}.".Log();
+            };
+
+            var AddToList = (string input) =>
+            {
+                if (!string.IsNullOrEmpty(input))
                 {
                     theList.Add(input.ToLower());
                 }
                 DisplayCountAndCapacity();
-            }
-            void DisplayCountAndCapacity()
-            {
-                Console.WriteLine($"The list now contains {theList.Count} items.");
-                Console.WriteLine($"The list has a capacity of {theList.Capacity}.");
-            }
+            };
 
-            void RemoveFromList(string input)
+            var RemoveFromList = (string input) =>
             {
                 if (!string.IsNullOrEmpty(input))
                 {
                     theList.Remove(input.ToLower());
                 }
                 DisplayCountAndCapacity();
-            }
+            };
 
+            var DisplayInstructions = () =>
+            {
+                ("Please enter a command (+ or -) followed by a name to add or remove from the list " +
+                "\nTo exit this menu, please enter '0'").Log();
+            };
             while (true)
             {
-                Console.WriteLine("Please enter a command (+ or -) followed by a name to add or remove from the list");
-                Console.WriteLine("To exit this menu, please enter '0'");
+               DisplayInstructions();
                 var input = StringValidation(Console.ReadLine());
 
                 if (HasExited(input))
@@ -132,7 +140,7 @@ namespace SkalProj_Datastrukturer_Minne
                         RemoveFromList(value);
                         break;
                     default:
-                        Console.WriteLine("Invalid command. Please use + or -.");
+                        "Invalid command. Please use + or -.".Log();
                         input = StringValidation(Console.ReadLine());
                         break;
                 }
