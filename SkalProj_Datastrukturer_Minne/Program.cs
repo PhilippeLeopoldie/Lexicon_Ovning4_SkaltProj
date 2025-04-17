@@ -3,20 +3,18 @@ using System.Runtime.CompilerServices;
 
 namespace SkalProj_Datastrukturer_Minne
 {
-    static class Program
+     static class Program
     {
         /// <summary>
         /// The main method, vill handle the menues for the program
         /// </summary>
         /// <param name="args"></param>
-
-         static void Log( this string message)
-        {
-            Console.WriteLine($"{message}");
-        }
+        static List<string> theList = new List<string>();
+        
         static void Main()
         {
-            var Log = (string message) => Console.WriteLine($"{message}");
+            //var Log = (string message) => Console.WriteLine($"{message}");
+
 
             while (true)
             {
@@ -78,72 +76,15 @@ namespace SkalProj_Datastrukturer_Minne
              * As a default case, tell them to use only + or -
              * Below you can see some inspirational code to begin working.
             */
-            List<string> theList = new();
-
-            var HasExited = (string input) => input.StartsWith('0');
-
-            var StringValidation = (string input) =>
-            {
-                while (string.IsNullOrWhiteSpace(input))
-                {
-                    "Invalid entry, try again: ".Log();
-                    input = Console.ReadLine();
-                }
-                ;
-                return input;
-            };
-
-            var DisplayCountAndCapacity = () =>
-            {
-                $"The list now contains {theList.Count} items.".Log();
-                $"The list has a capacity of {theList.Capacity}.".Log();
-            };
-
-            var AddToList = (string input) =>
-            {
-                if (!string.IsNullOrEmpty(input))
-                {
-                    theList.Add(input.ToLower());
-                }
-                DisplayCountAndCapacity();
-            };
-
-            var RemoveFromList = (string input) =>
-            {
-                if (!string.IsNullOrEmpty(input))
-                {
-                    theList.Remove(input.ToLower());
-                }
-                DisplayCountAndCapacity();
-            };
-
-            var DisplayInstructions = () =>
-            {
-                ("Please enter a command (+ or -) followed by a name to add or remove from the list " +
-                "\nTo exit this menu, please enter '0'").Log();
-            };
+            
             while (true)
             {
-               DisplayInstructions();
+                "------List------".Log();
+                DisplayInstructions();
                 var input = StringValidation(Console.ReadLine());
-
-                if (HasExited(input))
+                if (input.HasExited())
                     break;
-                char nav = input[0];
-                string value = input.Substring(1);
-                switch (nav)
-                {
-                    case '+':
-                        AddToList(value);
-                        break;
-                    case '-':
-                        RemoveFromList(value);
-                        break;
-                    default:
-                        "Invalid command. Please use + or -.".Log();
-                        input = StringValidation(Console.ReadLine());
-                        break;
-                }
+                SwitchCases(input, AddToList, RemoveFromList);
             }
 
             //List<string> theList = new List<string>();
@@ -164,6 +105,17 @@ namespace SkalProj_Datastrukturer_Minne
              * Create a switch with cases to enqueue items or dequeue items
              * Make sure to look at the queue after Enqueueing and Dequeueing to see how it behaves
             */
+            while (true)
+            {
+                "------Queue------".Log();
+                DisplayInstructions();
+                var input = Console.ReadLine().StringValidation();
+                if (input.HasExited())
+                    break;
+                Action<string> switchFromQueue = (input) => input.SwitchCases(Enqueue, Dequeue);
+                input.SwitchCases(Enqueue, Dequeue);
+            }
+
         }
 
         /// <summary>
@@ -176,6 +128,11 @@ namespace SkalProj_Datastrukturer_Minne
              * Create a switch with cases to push or pop items
              * Make sure to look at the stack after pushing and and poping to see how it behaves
             */
+            var DisplayInstructions = () =>
+            {
+                ("" +
+                "\n").Log();
+            };
         }
 
         static void CheckParanthesis()
@@ -185,7 +142,111 @@ namespace SkalProj_Datastrukturer_Minne
              * Example of correct: (()), {}, [({})],  List<int> list = new List<int>() { 1, 2, 3, 4 };
              * Example of incorrect: (()]), [), {[()}],  List<int> list = new List<int>() { 1, 2, 3, 4 );
              */
+            
 
+        }
+
+        private static void DisplayInstructions()
+        {
+            ("Please enter a command (+ or -) followed by a name to add or remove from the list" 
+                + "\nTo exit this menu, please enter '0'").Log();
+        }
+        private static void Log(this string message)
+        {
+            Console.WriteLine($"{message}");
+        }
+
+        private static bool HasExited(this string input)
+        {
+            return input.StartsWith('0');
+        }
+        private static string StringValidation(this string input)
+        {
+            while (string.IsNullOrWhiteSpace(input))
+            {
+                "Invalid entry, try again: ".Log();
+                input = Console.ReadLine();
+            }
+                ;
+            return input;
+        }
+
+        private static void DisplayCountAndCapacity()
+        {
+            $"The list now contains {theList.Count} items.".Log();
+            $"The list has a capacity of {theList.Capacity}.".Log();
+        }
+
+        private static void SwitchCases( this string input, Action<string> addElement, Action<string> removeElement)
+        {
+            char nav = input[0];
+            string value = input.Substring(1);
+            switch (nav)
+            {
+                case '+':
+                    addElement(value);
+                    break;
+                case '-':
+                    removeElement(value);
+                    break;
+                default:
+                    "Invalid command. Please use + or -.".Log();
+                    input = Console.ReadLine().StringValidation();
+                    break;
+            }
+        }
+        private static void AddToList(this string input)
+        {
+            if (!string.IsNullOrEmpty(input))
+            {
+                theList.Add(input.ToLower());
+            }
+            DisplayCountAndCapacity();
+        }
+
+        private static void RemoveFromList(this string input)
+        {
+            if (!string.IsNullOrEmpty(input))
+            {
+                while (!theList.Contains(input.ToLower()))
+                {
+                    $"'{input}' is not in the list!".Log();
+                    input = Console.ReadLine().StringValidation();
+                    input.SwitchCases(AddToList, RemoveFromList);
+                }
+                theList.Remove(input.ToLower());
+            }
+            DisplayCountAndCapacity();
+        }
+
+        private static void Enqueue(this string input)
+        {
+            if (!string.IsNullOrEmpty(input))
+            {
+                $"{input} joins the queue".Log();
+                theList.Insert(0,input.ToLower());
+            }else
+            {
+                "ICA opens, the queue is empty.".Log();
+            }
+                DisplayCountAndCapacity();
+        }
+        private static void Dequeue(this string input)
+        {
+            if (!string.IsNullOrEmpty(input))
+            {
+                //theList.Remove(input.ToLower());
+                
+                while (!theList.Last().Contains(input.ToLower()))
+                {
+                    $"'{input}' is not in the queue!".Log();
+                    input = Console.ReadLine().StringValidation();
+                    input.SwitchCases(Enqueue, Dequeue);
+                }
+                $"{theList.Last()} is served and leave".Log();
+                theList.RemoveAt(theList.Count - 1);
+            }
+            DisplayCountAndCapacity();
         }
 
     }
