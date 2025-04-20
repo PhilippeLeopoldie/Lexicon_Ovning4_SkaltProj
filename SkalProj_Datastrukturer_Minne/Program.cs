@@ -133,6 +133,40 @@ namespace SkalProj_Datastrukturer_Minne
              * Make sure to look at the stack after pushing and and poping to see how it behaves
             */
             
+            Stack<string> theStack = new();
+            while (true)
+            {
+                StackLabel.DisplayInstructions();
+                var input = Console.ReadLine().StringValidation();
+                if (input.HasExited())
+                    break;
+                input.SwitchCases(Push, Pop, theStack);
+            }
+        }
+
+        private static void Pop(string input, Stack<string> stack)
+        {
+            if (!string.IsNullOrEmpty(input))
+            {
+                if (stack.Count != 0) $"{stack.Pop()} is served and leave".Log();
+                StackLabel.DisplayCountAndCapacity(stack);
+            }
+            else "Please enter - for destacking".Log();
+            //QueueLabel.DisplayCountAndCapacity(stack);
+        }
+
+        private static void Push(string input, Stack<string> stack)
+        {
+            if (!string.IsNullOrEmpty(input))
+            {
+                $"{input} joins the {StackLabel}".Log();
+                stack.Push(input.ToLower());
+            }
+            else
+            {
+                $"the {StackLabel} is empty.".Log();
+            }
+            StackLabel.DisplayCountAndCapacity(stack);
         }
 
         static void CheckParanthesis()
@@ -174,12 +208,33 @@ namespace SkalProj_Datastrukturer_Minne
 
         private static void DisplayCountAndCapacity<T>(this string optionName, T collection)
         {
-            if (collection is List<string> list) { 
-                ($"The {optionName} now contains {list.Count} items." +
-            $"\nThe {optionName} has a capacity of {list.Capacity}.").Log();
+            if (collection is List<string> list)
+            {
+                var listCount = list.Count;
+                $"The {optionName} now contains {list.Count} items:".Log();
+                for(var i = 0; i < listCount; i++)
+                {
+                    $"{i+1}.{list.ElementAtOrDefault(i)}".Log();
+                }
+                $"The {optionName} has a capacity of {list.Capacity}.".Log();
             }
-            if (collection is Queue<string> queue) {
-                $"The {optionName} now contains {queue.Count} items.".Log();
+            else if (collection is Queue<string> queue)
+            {
+                var queueCount = queue.Count;
+                $"The {optionName} now contains {queue.Count} items:".Log();
+                for (var i = 0; i < queueCount; i++)
+                {
+                    $"{i+1}.{queue.ElementAtOrDefault(i)}".Log();
+                }
+            }
+            else if (collection is Stack<string> stack)
+            {
+                var stackCount = stack.Count;
+                $"The {optionName} now contains {stack.Count} items:".Log();
+                for (var i = 0; i < stackCount; i++)
+                {
+                    $"{i + 1}.{stack.ElementAtOrDefault(i)}".Log();
+                }
             }
         }
 
@@ -201,11 +256,19 @@ namespace SkalProj_Datastrukturer_Minne
                     if(collection is List<string>)
                     {
                         removeElement(value, collection);
-                    }else
+                        break;
+                    }
+                    else if (collection is Queue<string>)
                     {
                         removeElement(input, collection);
-                    }
                         break;
+                    }
+                    else if (collection is Stack<string>)
+                    {
+                        removeElement(input, collection);
+                        break;
+                    }
+                    break;
                 default:
                     "Invalid command.".Log();
                     //input = Console.ReadLine().StringValidation();
@@ -263,7 +326,7 @@ namespace SkalProj_Datastrukturer_Minne
                
                 QueueLabel.DisplayCountAndCapacity(queue);
             }else "Please enter - for dequeuing".Log();
-            QueueLabel.DisplayCountAndCapacity(queue);
+            //QueueLabel.DisplayCountAndCapacity(queue);
         }
 
     }
