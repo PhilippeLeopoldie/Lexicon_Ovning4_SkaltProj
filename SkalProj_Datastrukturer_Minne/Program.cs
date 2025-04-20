@@ -1,16 +1,22 @@
 ﻿using System;
+using System.Net.Sockets;
 using System.Runtime.CompilerServices;
+using Microsoft.VisualBasic;
 
 namespace SkalProj_Datastrukturer_Minne
 {
-     static class Program
+    static class Program
     {
         /// <summary>
         /// The main method, vill handle the menues for the program
         /// </summary>
         /// <param name="args"></param>
-        static List<string> theList = new List<string>();
         
+        //static Action<string> optionInstructions = (optionName) => DisplayInstructions(optionName);
+        static readonly string ListLabel = "List";
+        static readonly string QueueLabel = "Queue";
+        static readonly string StackLabel = "Stack";
+        static readonly string CheckParenthesisLabel = "Check Parenthesis";
         static void Main()
         {
             //var Log = (string message) => Console.WriteLine($"{message}");
@@ -18,6 +24,7 @@ namespace SkalProj_Datastrukturer_Minne
 
             while (true)
             {
+                Console.Clear();
                 Console.WriteLine("Please navigate through the menu by inputting the number \n(1, 2, 3 ,4, 0) of your choice"
                     + "\n1. Examine a List"
                     + "\n2. Examine a Queue"
@@ -76,15 +83,14 @@ namespace SkalProj_Datastrukturer_Minne
              * As a default case, tell them to use only + or -
              * Below you can see some inspirational code to begin working.
             */
-            
+             List<string> theList = new();
             while (true)
             {
-                "------List------".Log();
-                DisplayInstructions();
-                var input = StringValidation(Console.ReadLine());
+                ListLabel.DisplayInstructions();
+                var input = Console.ReadLine().StringValidation();
                 if (input.HasExited())
                     break;
-                SwitchCases(input, AddToList, RemoveFromList);
+                input.SwitchCases(AddToList, RemoveFromList, theList);
             }
 
             //List<string> theList = new List<string>();
@@ -105,17 +111,15 @@ namespace SkalProj_Datastrukturer_Minne
              * Create a switch with cases to enqueue items or dequeue items
              * Make sure to look at the queue after Enqueueing and Dequeueing to see how it behaves
             */
+            Queue<string> theQueue = new();
             while (true)
             {
-                "------Queue------".Log();
-                DisplayInstructions();
+                QueueLabel.DisplayInstructions();
                 var input = Console.ReadLine().StringValidation();
                 if (input.HasExited())
                     break;
-                Action<string> switchFromQueue = (input) => input.SwitchCases(Enqueue, Dequeue);
-                input.SwitchCases(Enqueue, Dequeue);
+                input.SwitchCases(Enqueue, Dequeue, theQueue);
             }
-
         }
 
         /// <summary>
@@ -128,11 +132,7 @@ namespace SkalProj_Datastrukturer_Minne
              * Create a switch with cases to push or pop items
              * Make sure to look at the stack after pushing and and poping to see how it behaves
             */
-            var DisplayInstructions = () =>
-            {
-                ("" +
-                "\n").Log();
-            };
+            
         }
 
         static void CheckParanthesis()
@@ -142,13 +142,14 @@ namespace SkalProj_Datastrukturer_Minne
              * Example of correct: (()), {}, [({})],  List<int> list = new List<int>() { 1, 2, 3, 4 };
              * Example of incorrect: (()]), [), {[()}],  List<int> list = new List<int>() { 1, 2, 3, 4 );
              */
-            
+
 
         }
 
-        private static void DisplayInstructions()
+        private static void DisplayInstructions(this string optionName)
         {
-            ("Please enter a command (+ or -) followed by a name to add or remove from the list" 
+            $"------{optionName}------".Log();
+            ($"Please enter a command (+ or -) followed by a name to add or remove from {optionName}"
                 + "\nTo exit this menu, please enter '0'").Log();
         }
         private static void Log(this string message)
@@ -165,88 +166,104 @@ namespace SkalProj_Datastrukturer_Minne
             while (string.IsNullOrWhiteSpace(input))
             {
                 "Invalid entry, try again: ".Log();
-                input = Console.ReadLine();
+                input = Console.ReadLine().Trim();
             }
                 ;
             return input;
         }
 
-        private static void DisplayCountAndCapacity()
+        private static void DisplayCountAndCapacity<T>(this string optionName, T collection)
         {
-            $"The list now contains {theList.Count} items.".Log();
-            $"The list has a capacity of {theList.Capacity}.".Log();
+            if (collection is List<string> list) { 
+                ($"The {optionName} now contains {list.Count} items." +
+            $"\nThe {optionName} has a capacity of {list.Capacity}.").Log();
+            }
+            if (collection is Queue<string> queue) {
+                $"The {optionName} now contains {queue.Count} items.".Log();
+            }
         }
 
-        private static void SwitchCases( this string input, Action<string> addElement, Action<string> removeElement)
+        private static string SwitchCases<T>(
+            this string input,
+            Action<string,T> addElement,
+            Action<string, T> removeElement,
+            T collection
+            )
         {
             char nav = input[0];
             string value = input.Substring(1);
             switch (nav)
             {
                 case '+':
-                    addElement(value);
+                    addElement(value, collection);
                     break;
                 case '-':
-                    removeElement(value);
-                    break;
+                    if(collection is List<string>)
+                    {
+                        removeElement(value, collection);
+                    }else
+                    {
+                        removeElement(input, collection);
+                    }
+                        break;
                 default:
-                    "Invalid command. Please use + or -.".Log();
-                    input = Console.ReadLine().StringValidation();
+                    "Invalid command.".Log();
+                    //input = Console.ReadLine().StringValidation();
                     break;
             }
+            return value;
         }
-        private static void AddToList(this string input)
+        private static void AddToList(this string input, List<string> list)
         {
             if (!string.IsNullOrEmpty(input))
             {
-                theList.Add(input.ToLower());
+                list.Add(input.ToLower());
+                ListLabel.DisplayCountAndCapacity(list);
             }
-            DisplayCountAndCapacity();
         }
 
-        private static void RemoveFromList(this string input)
+        private static void RemoveFromList(this string input, List<string> list)
         {
-            if (!string.IsNullOrEmpty(input))
+            if(!string.IsNullOrEmpty(input))
             {
-                while (!theList.Contains(input.ToLower()))
+                if (!list.Contains(input.ToLower()))
                 {
                     $"'{input}' is not in the list!".Log();
+                    DisplayInstructions(ListLabel);
                     input = Console.ReadLine().StringValidation();
-                    input.SwitchCases(AddToList, RemoveFromList);
+                    input = input.SwitchCases(AddToList, RemoveFromList, list);
                 }
-                theList.Remove(input.ToLower());
+                else
+                {
+                    list.Remove(input.ToLower());
+                    ListLabel.DisplayCountAndCapacity(list);
+                }
             }
-            DisplayCountAndCapacity();
+            
         }
 
-        private static void Enqueue(this string input)
+        private static void Enqueue(this string input, Queue<string> queue)
         {
             if (!string.IsNullOrEmpty(input))
             {
                 $"{input} joins the queue".Log();
-                theList.Insert(0,input.ToLower());
-            }else
-            {
-                "ICA opens, the queue is empty.".Log();
+                queue.Enqueue(input.ToLower());
             }
-                DisplayCountAndCapacity();
+            else
+            {
+                "the queue is empty.".Log();
+            }
+            QueueLabel.DisplayCountAndCapacity(queue);
         }
-        private static void Dequeue(this string input)
+        private static void Dequeue(this string input, Queue<string> queue)
         {
             if (!string.IsNullOrEmpty(input))
             {
-                //theList.Remove(input.ToLower());
-                
-                while (!theList.Last().Contains(input.ToLower()))
-                {
-                    $"'{input}' is not in the queue!".Log();
-                    input = Console.ReadLine().StringValidation();
-                    input.SwitchCases(Enqueue, Dequeue);
-                }
-                $"{theList.Last()} is served and leave".Log();
-                theList.RemoveAt(theList.Count - 1);
-            }
-            DisplayCountAndCapacity();
+                if(queue.Count != 0)$"{queue.Dequeue()} is served and leave".Log();
+               
+                QueueLabel.DisplayCountAndCapacity(queue);
+            }else "Please enter - for dequeuing".Log();
+            QueueLabel.DisplayCountAndCapacity(queue);
         }
 
     }
