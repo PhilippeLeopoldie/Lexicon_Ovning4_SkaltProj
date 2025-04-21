@@ -26,11 +26,12 @@ namespace SkalProj_Datastrukturer_Minne
             while (true)
             {
                 Console.Clear();
-                Console.WriteLine("Please navigate through the menu by inputting the number \n(1, 2, 3 ,4, 0) of your choice"
+                Console.WriteLine("Please navigate through the menu by inputting the number \n(1, 2, 3 ,4 ,5 , 0) of your choice"
                     + "\n1. Examine a List"
                     + "\n2. Examine a Queue"
                     + "\n3. Examine a Stack"
-                    + "\n4. CheckParenthesis"
+                    + "\n4. Reverse a Stack"
+                    + "\n5. CheckParenthesis"
                     + "\n0. Exit the application");
                 char input = ' '; //Creates the character input to be used with the switch-case below.
                 try
@@ -54,6 +55,9 @@ namespace SkalProj_Datastrukturer_Minne
                         ExamineStack();
                         break;
                     case '4':
+                        ReverseStack();
+                        break;
+                    case '5':
                         CheckParanthesis();
                         break;
                     /*
@@ -155,6 +159,27 @@ namespace SkalProj_Datastrukturer_Minne
             }
         }
 
+        static void ReverseStack()
+        {
+            Stack<char> theStack = new();
+            while (true)
+            {
+                "----------StackReverse---------".Log();
+                "Please enter a string to reverse it. Enter '0' to Exit".Log();
+                var input = Console.ReadLine().StringValidation();
+                if (input.HasExited())
+                    break;
+                foreach (var letter in input)
+                {
+                    theStack.Push(letter);
+                }
+                foreach (var letter in input)
+                {
+                    Console.Write(theStack.Pop());
+                }
+                "".Log();
+            }
+        }
         private static void Pop(string input, Stack<string> stack)
         {
             if (!string.IsNullOrEmpty(input))
