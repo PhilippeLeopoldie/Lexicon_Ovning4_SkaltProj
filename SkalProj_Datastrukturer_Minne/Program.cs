@@ -146,7 +146,7 @@ namespace SkalProj_Datastrukturer_Minne
              * Loop this method until the user inputs something to exit to main menue.
              * Create a switch with cases to push or pop items
              * Make sure to look at the stack after pushing and and poping to see how it behaves
-            */
+             */
 
             Stack<string> theStack = new();
             while (true)
@@ -157,6 +157,12 @@ namespace SkalProj_Datastrukturer_Minne
                     break;
                 input.SwitchCases(Push, Pop, theStack);
             }
+
+            /*
+             *  Varför är det inte så smart att använda en stack i det här fallet? 
+             *  Eftersom en stack är LIFO (Last In, First Out) passar den inte för en kö på ICA,
+             *  där den som ställt sig först i kön ska få lämna först – inte den som kom sist.
+             */
         }
 
         static void ReverseStack()
