@@ -12,7 +12,7 @@ namespace SkalProj_Datastrukturer_Minne
         /// The main method, vill handle the menues for the program
         /// </summary>
         /// <param name="args"></param>
-        
+
         //static Action<string> optionInstructions = (optionName) => DisplayInstructions(optionName);
         static readonly string ListLabel = "List";
         static readonly string QueueLabel = "Queue";
@@ -84,7 +84,7 @@ namespace SkalProj_Datastrukturer_Minne
              * As a default case, tell them to use only + or -
              * Below you can see some inspirational code to begin working.
             */
-             List<string> theList = new();
+            List<string> theList = new();
             while (true)
             {
                 ListLabel.DisplayInstructions();
@@ -94,12 +94,22 @@ namespace SkalProj_Datastrukturer_Minne
                 input.SwitchCases(AddToList, RemoveFromList, theList);
             }
 
-            //List<string> theList = new List<string>();
-            //string input = Console.ReadLine();
-            //char nav = input[0];
-            //string value = input.substring(1);
+            /* 
+                2.       När ökar listans kapacitet? (Alltså den underliggande arrayens storlek) 
+                         När man lägger till ett element och det inte finns tillräckligt med plats i den underliggande arrayen.
 
-            //switch(nav){...}
+                3.       Med hur mycket ökar kapaciteten? 
+                         kapaciteten ökar från 4  till 8 , från 8 till 16, från 16 till 32 osv.
+
+                4.       Varför ökar inte listans kapacitet i samma takt som element läggs till? 
+                         för bättre prestanda
+
+                5.       Minskar kapaciteten när element tas bort ur listan? 
+                        Nej
+
+                6.       När är det då fördelaktigt att använda en egendefinierad array istället för en lista?
+                        När man vet exakt hur många element som behövs  
+            */
         }
 
         /// <summary>
@@ -133,7 +143,7 @@ namespace SkalProj_Datastrukturer_Minne
              * Create a switch with cases to push or pop items
              * Make sure to look at the stack after pushing and and poping to see how it behaves
             */
-            
+
             Stack<string> theStack = new();
             while (true)
             {
@@ -177,7 +187,7 @@ namespace SkalProj_Datastrukturer_Minne
              * Example of correct: (()), {}, [({})],  List<int> list = new List<int>() { 1, 2, 3, 4 };
              * Example of incorrect: (()]), [), {[()}],  List<int> list = new List<int>() { 1, 2, 3, 4 );
              */
-            while(true)
+            while (true)
             {
                 $"-------{CheckParenthesisLabel}------".Log();
                 "Please enter a string to check if the parenthesis are correct or incorrect.".Log();
@@ -248,9 +258,9 @@ namespace SkalProj_Datastrukturer_Minne
             {
                 var listCount = list.Count;
                 $"The {optionName} now contains {list.Count} items:".Log();
-                for(var i = 0; i < listCount; i++)
+                for (var i = 0; i < listCount; i++)
                 {
-                    $"{i+1}.{list.ElementAtOrDefault(i)}".Log();
+                    $"{i + 1}.{list.ElementAtOrDefault(i)}".Log();
                 }
                 $"The {optionName} has a capacity of {list.Capacity}.".Log();
             }
@@ -260,7 +270,7 @@ namespace SkalProj_Datastrukturer_Minne
                 $"The {optionName} now contains {queue.Count} items:".Log();
                 for (var i = 0; i < queueCount; i++)
                 {
-                    $"{i+1}.{queue.ElementAtOrDefault(i)}".Log();
+                    $"{i + 1}.{queue.ElementAtOrDefault(i)}".Log();
                 }
             }
             else if (collection is Stack<string> stack)
@@ -276,7 +286,7 @@ namespace SkalProj_Datastrukturer_Minne
 
         private static string SwitchCases<T>(
             this string input,
-            Action<string,T> addElement,
+            Action<string, T> addElement,
             Action<string, T> removeElement,
             T collection
             )
@@ -289,7 +299,7 @@ namespace SkalProj_Datastrukturer_Minne
                     addElement(value, collection);
                     break;
                 case '-':
-                    if(collection is List<string>)
+                    if (collection is List<string>)
                     {
                         removeElement(value, collection);
                         break;
@@ -323,7 +333,7 @@ namespace SkalProj_Datastrukturer_Minne
 
         private static void RemoveFromList(this string input, List<string> list)
         {
-            if(!string.IsNullOrEmpty(input))
+            if (!string.IsNullOrEmpty(input))
             {
                 if (!list.Contains(input.ToLower()))
                 {
@@ -338,7 +348,7 @@ namespace SkalProj_Datastrukturer_Minne
                     ListLabel.DisplayCountAndCapacity(list);
                 }
             }
-            
+
         }
 
         private static void Enqueue(this string input, Queue<string> queue)
@@ -358,10 +368,11 @@ namespace SkalProj_Datastrukturer_Minne
         {
             if (!string.IsNullOrEmpty(input))
             {
-                if(queue.Count != 0)$"{queue.Dequeue()} is served and leave".Log();
-               
+                if (queue.Count != 0) $"{queue.Dequeue()} is served and leave".Log();
+
                 QueueLabel.DisplayCountAndCapacity(queue);
-            }else "Please enter - for dequeuing".Log();
+            }
+            else "Please enter - for dequeuing".Log();
             //QueueLabel.DisplayCountAndCapacity(queue);
         }
 
