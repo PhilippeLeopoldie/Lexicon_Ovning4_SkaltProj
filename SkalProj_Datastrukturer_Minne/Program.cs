@@ -182,30 +182,7 @@ namespace SkalProj_Datastrukturer_Minne
                 "".Log();
             }
         }
-        private static void Pop(string input, Stack<string> stack)
-        {
-            if (!string.IsNullOrEmpty(input))
-            {
-                if (stack.Count != 0) $"{stack.Pop()} is served and leave".Log();
-                StackLabel.DisplayCountAndCapacity(stack);
-            }
-            else "Please enter - for destacking".Log();
-        }
-
-        private static void Push(string input, Stack<string> stack)
-        {
-            if (!string.IsNullOrEmpty(input))
-            {
-                $"{input} joins the {StackLabel}".Log();
-                stack.Push(input.ToLower());
-            }
-            else
-            {
-                $"the {StackLabel} is empty.".Log();
-            }
-            StackLabel.DisplayCountAndCapacity(stack);
-        }
-
+        
         static void CheckParanthesis()
         {
             /*
@@ -254,7 +231,7 @@ namespace SkalProj_Datastrukturer_Minne
                     else return false;
                 }
             }
-            return true;
+            return stack.Count == 0;
         }
 
         private static void DisplayInstructions(this string optionName)
@@ -404,6 +381,31 @@ namespace SkalProj_Datastrukturer_Minne
             }
             else "Please enter - for dequeuing".Log();
         }
+
+        private static void Pop(string input, Stack<string> stack)
+        {
+            if (!string.IsNullOrEmpty(input))
+            {
+                if (stack.Count != 0) $"{stack.Pop()} is served and leave".Log();
+                StackLabel.DisplayCountAndCapacity(stack);
+            }
+            else "Please enter - for destacking".Log();
+        }
+
+        private static void Push(string input, Stack<string> stack)
+        {
+            if (!string.IsNullOrEmpty(input))
+            {
+                $"{input} joins the {StackLabel}".Log();
+                stack.Push(input.ToLower());
+            }
+            else
+            {
+                $"the {StackLabel} is empty.".Log();
+            }
+            StackLabel.DisplayCountAndCapacity(stack);
+        }
+
     }
 }
 
