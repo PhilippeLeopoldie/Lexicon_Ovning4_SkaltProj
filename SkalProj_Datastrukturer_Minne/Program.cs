@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Sockets;
+using System.Reflection.Metadata.Ecma335;
 using System.Runtime.CompilerServices;
 using Microsoft.VisualBasic;
 
@@ -176,8 +177,43 @@ namespace SkalProj_Datastrukturer_Minne
              * Example of correct: (()), {}, [({})],  List<int> list = new List<int>() { 1, 2, 3, 4 };
              * Example of incorrect: (()]), [), {[()}],  List<int> list = new List<int>() { 1, 2, 3, 4 );
              */
+            while(true)
+            {
+                $"-------{CheckParenthesisLabel}------".Log();
+                "Please enter a string to check if the parenthesis are correct or incorrect.".Log();
+                var input = Console.ReadLine().StringValidation();
+                if (input.HasExited())
+                    break;
 
+                if (input.isCorrect()) "The parenthesis are correct.".Log();
+                else "The parenthesis are incorrect.".Log();
+            }
+        }
 
+        private static bool isCorrect(this string input)
+        {
+            Stack<char> stack = new();
+            foreach (var letter in input)
+            {
+                if (letter is '(' or '{' or '[') stack.Push(letter);
+
+                if (letter is ')' or '}' or ']')
+                {
+                    char pairLetter = letter switch
+                    {
+                        ')' => '(',
+                        '}' => '{',
+                        ']' => '['
+                    };
+                    if (stack.TryPop(out char result))
+                    {
+                        if (pairLetter == result) continue;
+                        else return false;
+                    }
+                    else return false;
+                }
+            }
+            return true;
         }
 
         private static void DisplayInstructions(this string optionName)
@@ -188,7 +224,7 @@ namespace SkalProj_Datastrukturer_Minne
         }
         private static void Log(this string message)
         {
-            Console.WriteLine($"{message}");
+            Console.WriteLine(message);
         }
 
         private static bool HasExited(this string input)
