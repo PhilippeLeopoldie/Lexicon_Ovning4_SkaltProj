@@ -13,16 +13,12 @@ namespace SkalProj_Datastrukturer_Minne
         /// </summary>
         /// <param name="args"></param>
 
-        //static Action<string> optionInstructions = (optionName) => DisplayInstructions(optionName);
         static readonly string ListLabel = "List";
         static readonly string QueueLabel = "Queue";
         static readonly string StackLabel = "Stack";
         static readonly string CheckParenthesisLabel = "Check Parenthesis";
         static void Main()
         {
-            //var Log = (string message) => Console.WriteLine($"{message}");
-
-
             while (true)
             {
                 Console.Clear();
@@ -194,7 +190,6 @@ namespace SkalProj_Datastrukturer_Minne
                 StackLabel.DisplayCountAndCapacity(stack);
             }
             else "Please enter - for destacking".Log();
-            //QueueLabel.DisplayCountAndCapacity(stack);
         }
 
         private static void Push(string input, Stack<string> stack)
@@ -268,6 +263,7 @@ namespace SkalProj_Datastrukturer_Minne
             ($"Please enter a command (+ or -) followed by a name to add or remove from {optionName}"
                 + "\nTo exit this menu, please enter '0'").Log();
         }
+
         private static void Log(this string message)
         {
             Console.WriteLine(message);
@@ -277,6 +273,7 @@ namespace SkalProj_Datastrukturer_Minne
         {
             return input.StartsWith('0');
         }
+
         private static string StringValidation(this string input)
         {
             while (string.IsNullOrWhiteSpace(input))
@@ -284,7 +281,6 @@ namespace SkalProj_Datastrukturer_Minne
                 "Invalid entry, try again: ".Log();
                 input = Console.ReadLine().Trim();
             }
-                ;
             return input;
         }
 
@@ -353,7 +349,6 @@ namespace SkalProj_Datastrukturer_Minne
                     break;
                 default:
                     "Invalid command.".Log();
-                    //input = Console.ReadLine().StringValidation();
                     break;
             }
             return value;
@@ -384,7 +379,6 @@ namespace SkalProj_Datastrukturer_Minne
                     ListLabel.DisplayCountAndCapacity(list);
                 }
             }
-
         }
 
         private static void Enqueue(this string input, Queue<string> queue)
@@ -409,9 +403,7 @@ namespace SkalProj_Datastrukturer_Minne
                 QueueLabel.DisplayCountAndCapacity(queue);
             }
             else "Please enter - for dequeuing".Log();
-            //QueueLabel.DisplayCountAndCapacity(queue);
         }
-
     }
 }
 
