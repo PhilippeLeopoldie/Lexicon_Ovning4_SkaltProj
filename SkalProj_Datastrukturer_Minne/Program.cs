@@ -229,6 +229,11 @@ namespace SkalProj_Datastrukturer_Minne
                 if (input.isCorrect()) "The parenthesis are correct.".Log();
                 else "The parenthesis are incorrect.".Log();
             }
+            /* 
+             * Vilken datastruktur använder du?
+             * Jag använder en stack, eftersom den följer principen LIFO (Last In, First Out),
+             * och vi vill stänga den senast öppnade parentesen först.
+             */
         }
 
         private static bool isCorrect(this string input)
